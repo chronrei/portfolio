@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>박준규 - 게임 개발자 포트폴리오</title>
+    <!-- 깔끔한 고딕 글꼴 적용 (Pretendard) -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* 변수 설정: 라이트 모드 기본 */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #222222;
+            --text-muted: #666666;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --primary-color: #1a365d; /* 남색 포인트 */
+            --card-bg: #ffffff;
+            --card-border: #eeeeee;
+            --card-shadow: rgba(0, 0, 0, 0.08);
+            --gray-box: #e0e0e0;
+            --tag-text: #ffffff;
+        }
+
+        /* 다크 모드 변수 설정 */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --nav-bg: rgba(18, 18, 18, 0.95);
+            --primary-color: #6495ed; /* 다크 모드에서 잘 보이는 밝은 남/파랑 */
+            --card-bg: #1e1e1e;
+            --card-border: #333333;
+            --card-shadow: rgba(0, 0, 0, 0.5);
+            --gray-box: #333333;
+            --tag-text: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* 네비게이션 고정 */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--nav-bg);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        nav {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .menu {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .menu a {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+
+        /* 메인 레이아웃 */
+        main {
+            max-width: 1000px;
+            margin: 80px auto 0; /* 헤더 높이만큼 여백 */
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        /* 프로필 영역 */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .profile-img-placeholder {
+            width: 200px;
+            height: 250px;
+            background-color: var(--gray-box);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .typing-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            min-height: 2rem; /* 타이핑 전 영역 확보 */
+            border-right: 2px solid var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink-caret .75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color); }
+        }
+
+        /* 자기소개 영역 */
+        .about-text {
+            font-size: 1.05rem;
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        /* 강점 (해시태그) */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tag {
+            background-color: var(--primary-color);
+            color: var(--tag-text);
+            padding: 0.8rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px var(--card-shadow);
+        }
+
+        .tag-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .tag-desc {
+            font-size: 0.85rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* 경험 (카드 스타일) */
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px var(--card-shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .card-date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .card-body p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .card-body strong {
+            display: inline-block;
+            width: 60px;
+            color: var(--text-color);
+        }
+
+        /* 기타 정보 (그리드 레이아웃) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .info-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .info-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* 위로 가기 버튼 */
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+        }
+
+        #scrollTopBtn:hover {
+            background-color: var(--text-color);
+        }
+
+        /* 푸터 */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* 반응형 모바일 */
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .menu {
+                gap: 1rem;
+            }
+            .menu a {
+                display: none; /* 모바일에서는 메뉴 텍스트 숨김, 테마 버튼만 유지 */
+            }
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 고정 메뉴바 -->
+    <header>
+        <nav>
+            <div class="logo">Park Jun-gyu</div>
+            <div class="menu">
+                <a href="#about">소개</a>
+                <a href="#strengths">역량</a>
+                <a href="#experience">경험</a>
+                <a href="#skills">정보</a>
+                <button class="theme-toggle" id="themeToggle">Dark Mode</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 프로필 섹션 -->
+        <section class="hero-section" id="profile">
+            <div class="profile-img-placeholder">
+                사진 (회색 상자)
+            </div>
+            <div class="hero-content">
+                <p class="subtitle">컴퓨터공학과 4학년 | 지원 직무: 게임 개발자</p>
+                <h1>박준규</h1>
+                <div class="typing-text" id="typingEffect"></div>
+            </div>
+        </section>
+
+        <!-- 자기소개 섹션 -->
+        <section id="about">
+            <h2>자기소개</h2>
+            <div class="about-text">
+                평소 게임 하는 것을 좋아하고 많이 했기에 만드는 것도 좋아하게 됐습니다. 학과 프로젝트와 개인 프로젝트로 웹 게임을 만들어 봤습니다.
+            </div>
+        </section>
+
+        <!-- 강점 섹션 -->
+        <section id="strengths">
+            <h2>강점 및 역량</h2>
+            <div class="tags-container">
+                <div class="tag">
+                    <span class="tag-title">#협업</span>
+                    <span class="tag-desc">2~4인 팀으로 게임, 웹 페이지 개발 및 데이터베이스 설계</span>
+                </div>
+                <div class="tag">
+                    <span class="tag-title">#집중력</span>
+                    <span class="tag-desc">6시간 가량 걸리는 과제를 앉은 자리에서 전부 마무리함</span>
+                </div>
+                <div class="tag">
+                    <span class="tag-title">#문제 해결력</span>
+                    <span class="tag-desc">백준 문제를 100개 가량 풀어온 기록</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 경험 섹션 -->
+        <section id="experience">
+            <h2>경험 및 활동</h2>
+            <div class="cards-container">
+                <!-- 경험 카드 1 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">전공 수업 웹페이지 제작 과제</div>
+                        <div class="card-date">2025. 1학기</div>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>역할</strong> 웹 페이지 개발 및 보안 담당</p>
+                        <p><strong>수행</strong> 웹 페이지 개발과 XSS 취약점 방어망 구축</p>
+                        <p><strong>결과</strong> 웹 페이지 제작 과제 1등</p>
+                    </div>
+                </div>
+                
+                <!-- 경험 카드 2 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">전공 수업 데이터베이스 설계 과제</div>
+                        <div class="card-date">2025. 1학기</div>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>역할</strong> 팀 총괄 및 영화관 데이터베이스 구축</p>
+                        <p><strong>수행</strong> 팀원 간 일정을 조정해 맡은 일을 제시간에 끝내게 하고 설계를 하나로 합쳐 영화관 데이터베이스를 구축</p>
+                        <p><strong>결과</strong> 2주간 실사용 중 중복 좌석 예매 같은 문제가 발생하지 않음</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 기타 정보 섹션 -->
+        <section id="skills">
+            <h2>스킬 및 정보</h2>
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>사용 가능 도구</h3>
+                    <ul class="info-list">
+                        <li>Github</li>
+                        <li>Python</li>
+                        <li>Java</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h3>자격증 및 기타</h3>
+                    <ul class="info-list">
+                        <li><strong>자격증:</strong> 정보처리기사</li>
+                        <li><strong>관심사/취미:</strong> 신작 게임 찾아보기, 독서</li>
+                        <li><strong>연락처:</strong> pjk79244@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 박준규. All Rights Reserved.
+    </footer>
+
+    <!-- 맨 위로 가기 버튼 -->
+    <button id="scrollTopBtn" title="맨 위로 가기">↑</button>
+
+    <script>
+        // 1. 타자 치듯 나타나는 한 줄 소개 기능
+        const textToType = "고객의 즐거움을 추구하는 개발자";
+        const typingElement = document.getElementById("typingEffect");
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                typingElement.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 100); // 0.1초마다 한 글자씩
+            }
+        }
+        
+        // 페이지 로드 완료 후 0.5초 뒤 타이핑 시작
+        setTimeout(typeWriter, 500);
+
+
+        // 2. 다크 모드 토글 기능
+        const themeToggleBtn = document.getElementById("themeToggle");
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener("click", () => {
+            const currentTheme = htmlElement.getAttribute("data-theme");
+            if (currentTheme === "dark") {
+                htmlElement.removeAttribute("data-theme");
+                themeToggleBtn.textContent = "Dark Mode";
+            } else {
+                htmlElement.setAttribute("data-theme", "dark");
+                themeToggleBtn.textContent = "Light Mode";
+            }
+        });
+
+
+        // 3. 맨 위로 가기 버튼 스크롤 기능
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.display = "flex";
+            } else {
+                scrollTopBtn.style.display = "none";
+            }
+        });
+
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+</body>
+</html>
